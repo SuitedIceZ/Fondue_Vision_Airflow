@@ -1,0 +1,42 @@
+# Airflow .gitignore
+
+# Airflow configuration file
+airflow.cfg
+
+# Airflow logs
+logs/
+
+# Airflow metadata database
+airflow.db
+
+# Airflow variables
+variables.json
+
+# Airflow connections
+connections.json
+
+# Airflow plugins
+# plugins/
+
+# Airflow virtual environment
+venv/
+
+# Airflow compiled Python files
+*.pyc
+*.pyo
+__pycache__/
+
+# Airflow temporary files
+*.swp
+*.swo
+*.log
+*.pid
+
+# Ignore any local development or personal files
+.local/
+
+# folder for file
+file_buffer/
+
+# environment file
+.env

@@ -10,15 +10,15 @@ sudo apt-get install python3 python3-pip python3-venv
 ```
 python3 -m venv airflow_venv
 ```
+## Activate
+```
+source airflow_venv/bin/activate
+```
 ## install python dependency
 ```
 pip install --upgrade apache-airflow[postgres,ssh,celery]
 pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-auth google-auth-oauthlib
-```
-
-# Activate (at root)
-```
-source airflow_venv/bin/activate
+pip install python-dotenv
 ```
 
 # Init
