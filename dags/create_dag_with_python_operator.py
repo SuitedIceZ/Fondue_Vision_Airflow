@@ -1,7 +1,12 @@
+from dotenv import dotenv_values
+# Load environment variables from .env file
+env_vars = dotenv_values()
+
 import sys
-sys.path.insert(0, '/home/natnaphon/airflow/plugins')
-import drive_upload
-import drive_download
+sys.path.insert(0, env_vars['FILE_PLUGINS_PATH'])
+
+import drive_upload_call
+import drive_download_call
 
 from datetime import datetime, timedelta
 
@@ -29,11 +34,11 @@ with DAG(
     )
     upload_csv = PythonOperator(
         task_id='upload_csv',
-        python_callable=drive_upload.upload_to_drive,
+        python_callable=drive_upload_call.upload_to_drive,
     )
     download_csv = PythonOperator(
         task_id='download_csv',
-        python_callable=drive_download.download_from_drive,
+        python_callable=drive_download_call.download_from_drive,
     )
 
 # Set the task dependencies
