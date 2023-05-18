@@ -20,6 +20,8 @@ pip install --upgrade apache-airflow[postgres,ssh,celery]
 pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-auth google-auth-oauthlib
 pip install --upgrade python-dotenv pandas
 pip install pythainlp[translate]
+pip install spacy_sentence_bert
+pip install tensorboardX
 ```
 
 # Init

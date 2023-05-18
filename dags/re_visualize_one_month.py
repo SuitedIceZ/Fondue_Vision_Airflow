@@ -10,8 +10,10 @@ from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python import PythonOperator
 
+
 import scraping_data_call
 import preprocess_data_call
+import model_predict_call
 
 # Set the default arguments for the DAG
 default_args = {
@@ -19,7 +21,7 @@ default_args = {
     'depends_on_past': False,
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 5,
+    'retries': 0,
     'retry_delay': timedelta(minutes=1),
     'start_date': datetime(2023, 1, 1),
 }
@@ -47,9 +49,11 @@ preprocess_data = PythonOperator(
     python_callable=preprocess_data_call.preprocess_data,
 )
 
-predict_with_model = DummyOperator(
+predict_with_model = PythonOperator(
     task_id='predict_with_model',
     dag=dag,
+    python_callable=model_predict_call.predict_new_label,
+    queue='gpu_queue'
 )
 
 send_to_visualize_frontend = DummyOperator(
