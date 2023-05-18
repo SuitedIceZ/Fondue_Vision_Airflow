@@ -11,6 +11,7 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python import PythonOperator
 
 import scraping_data_call
+import preprocess_data_call
 
 # Set the default arguments for the DAG
 default_args = {
@@ -40,9 +41,10 @@ scraping_data = PythonOperator(
 )
 
 # include drop table & translate & tokenization
-preprocess_data = DummyOperator(
+preprocess_data = PythonOperator(
     task_id='preprocess_data',
     dag=dag,
+    python_callable=preprocess_data_call.preprocess_data,
 )
 
 predict_with_model = DummyOperator(

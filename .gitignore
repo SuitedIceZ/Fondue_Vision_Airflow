@@ -40,3 +40,6 @@ file_buffer/
 
 # environment file
 .env
+
+# spark
+spark/
