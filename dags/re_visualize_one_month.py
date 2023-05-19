@@ -15,6 +15,15 @@ import scraping_data_call
 import preprocess_data_call
 import model_predict_call
 
+from pythainlp.translate import Translate
+import spacy_sentence_bert
+from pydantic import BaseModel
+import joblib
+import csv
+
+
+
+
 # Set the default arguments for the DAG
 default_args = {
     'owner': 'FondueVision',
@@ -52,8 +61,7 @@ preprocess_data = PythonOperator(
 predict_with_model = PythonOperator(
     task_id='predict_with_model',
     dag=dag,
-    python_callable=model_predict_call.predict_new_label,
-    queue='gpu_queue'
+    python_callable=model_predict_call.relabel_data,
 )
 
 send_to_visualize_frontend = DummyOperator(

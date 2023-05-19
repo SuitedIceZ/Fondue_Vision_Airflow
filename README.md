@@ -15,6 +15,7 @@ python3 -m venv airflow_venv
 source airflow_venv/bin/activate
 ```
 ## install python dependency
+### Airflow
 ```
 pip install --upgrade apache-airflow[postgres,ssh,celery]
 pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-auth google-auth-oauthlib
@@ -22,6 +23,12 @@ pip install --upgrade python-dotenv pandas
 pip install pythainlp[translate]
 pip install spacy_sentence_bert
 pip install tensorboardX
+pip install uvicorn
+```
+### Service
+```
+sudo apt install uvicorn 
+pip install fastapi
 ```
 
 # Init
@@ -35,11 +42,16 @@ airflow users create --username admin --firstname firstname --lastname lastname 
 ```
 
 # Run
+## airflow
 ```
 airflow webserver -p 8080
 ```
 
 ```
 airflow scheduler
+```
+## service
+```
+uvicorn main:app 
 ```
 
