@@ -34,7 +34,7 @@ default_args = {
     'email_on_retry': False,
     'retries': 0,
     'retry_delay': timedelta(minutes=1),
-    'start_date': datetime(2023, 1, 1),
+    'start_date': datetime(2023, 6, 19),
 }
 
 # Define the DAG
