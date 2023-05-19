@@ -14,6 +14,10 @@ python3 -m venv airflow_venv
 ```
 source airflow_venv/bin/activate
 ```
+or
+```
+cd .. && source airflow_venv/bin/activate && cd airflow
+```
 ## install python dependency
 ### Airflow
 ```

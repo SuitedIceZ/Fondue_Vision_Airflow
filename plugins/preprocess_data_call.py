@@ -35,10 +35,20 @@ def preprocess_data():
     for i in range(len(data_droped_empty_label)):
         data_droped_empty_label[i][6] = word_tokenize(data_droped_empty_label[i][2], engine="newmm", keep_whitespace=False)
         if(i%1000==0):
-            print(i/len(data_droped_empty_label)*100, "%")
+            print(i/len(data_droped_empty_label)*100, "%")  
+
+    # transfrom location to long (column 1), lat (column 8)
+    for i in range(len(data_droped_empty_label)):
+        data_droped_empty_label[i][1] = data_droped_empty_label[i][1].replace("[","")
+        data_droped_empty_label[i][1] = data_droped_empty_label[i][1].replace("]","")
+        data_droped_empty_label[i][1] = data_droped_empty_label[i][1].replace("'","")
+        data_droped_empty_label[i][1] = data_droped_empty_label[i][1].replace(" ","")
+        location = data_droped_empty_label[i][1].split(",")
+        data_droped_empty_label[i][1] = location[0]
+        data_droped_empty_label[i].append(location[1])
 
     #write data to csv
-    csv_columns = ['type','Name','description','photo_url','timestamp','state','tokenized_description','new_label']
+    csv_columns = ['type','longitude','description','photo_url','timestamp','state','tokenized_description','new_label','latitude']
     csv_file_output = env_vars['FILE_BUFFER_PATH'] + "tokenized_data.csv"
     with open(csv_file_output, 'w') as csvfile:
         write = csv.writer(csvfile)

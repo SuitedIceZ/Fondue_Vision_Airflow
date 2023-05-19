@@ -14,6 +14,7 @@ from airflow.operators.python import PythonOperator
 import scraping_data_call
 import preprocess_data_call
 import model_predict_call
+import extract_top_word_call
 
 from pythainlp.translate import Translate
 import spacy_sentence_bert
@@ -64,6 +65,12 @@ predict_with_model = PythonOperator(
     python_callable=model_predict_call.relabel_data,
 )
 
+count_top_word = PythonOperator(
+    task_id='count_top_word',
+    dag=dag,
+    python_callable=extract_top_word_call.extract_top_word,
+)
+
 send_to_visualize_frontend = DummyOperator(
     task_id='send_to_visualize_frontend',
     dag=dag,
@@ -71,4 +78,4 @@ send_to_visualize_frontend = DummyOperator(
 
 
 # Set the task dependencies
-scraping_data >> preprocess_data >> predict_with_model >> send_to_visualize_frontend
+scraping_data >> preprocess_data >> predict_with_model >> count_top_word >> send_to_visualize_frontend

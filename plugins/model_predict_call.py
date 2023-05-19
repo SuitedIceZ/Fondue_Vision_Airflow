@@ -8,6 +8,7 @@ import requests
 env_vars = dotenv_values()
 
 input_path = env_vars['FILE_BUFFER_PATH'] + 'tokenized_data.csv'
+isStopAt100 = True
 
 def relabel_data():
     # load data
@@ -18,6 +19,42 @@ def relabel_data():
         for row in reader:
             data_dict.append(row)
 
+    # label translation
+    dictionary_list = [('สัตว์จรจัด', 'stray'),
+        ('ความสะอาด', 'sanitary'),
+        ('ป้าย', 'sign'),
+        ('คนจรจัด', 'homeless'),
+        ('ทางเท้า', 'sidewalk'),
+        ('ต้นไม้', 'tree'),
+        ('ความปลอดภัย', 'safety'),
+        ('ถนน', 'roads'),
+        ('ท่อระบายน้ำ', 'sewer'),
+        ('น้ำท่วม', 'flooding'),
+        ('สะพาน', 'bridge'),
+        ('เสียงรบกวน', 'noise'),
+        ('PM2.5', 'PM2.5'),
+        ('แสงสว่าง', 'light'),
+        ('จราจร', 'traffic'),
+        ('เสนอแนะ', 'etc'),
+        ('กีดขวาง', 'obstacle'),
+        ('สายไฟ', 'electric'),
+        ('ร้องเรียน', 'complaint'),
+        ('คลอง', 'canal'),
+        ('สอบถาม', 'question'),
+        ('การเดินทาง', 'travel'),
+        ('ป้ายจราจร', 'traffic sign'),
+        ('ห้องน้ำ', 'toilet')]
+
+    th2en_label_dictionary = {}
+    en2th_label_dictionary = {}
+    for i in range(len(dictionary_list)):
+        #print(dictionary_list[i][0])
+        th2en_label_dictionary[dictionary_list[i][0]] = dictionary_list[i][1]
+        en2th_label_dictionary[dictionary_list[i][1]] = dictionary_list[i][0]
+    print("th2en dict",th2en_label_dictionary)
+    print("en2th dict",en2th_label_dictionary)
+
+
     # predict and relabel all rows
     for i in range(len(data_dict)):
         data = {
@@ -26,11 +63,27 @@ def relabel_data():
         # res = requests.post(f"http://localhost:8000/predict/text")
         response = requests.post("http://localhost:8000/predict/text", json=data)
         data_dict[i][7] = response.text.split('"')[3]
-        if(i%1000==0):
-            print(i/len(data_dict)*100, "%")
+        # print("test response :",data_dict[i][7], response.text.split('"')[3])
+        # translate new_label back to thai
+        
+        # print("test before :", data_dict[i][7])
+        data_dict[i][7] = en2th_label_dictionary[data_dict[i][7]]
+        # print("test after :", data_dict[i][7])
+        if(i%100==0):
+            print(i/len(data_dict)*100, "%", " writing back up to csv")
+            #write data to csv
+            csv_columns = ['type','longitude','description','photo_url','timestamp','state','tokenized_description','new_label','latitude']
+            csv_file_output = env_vars['FILE_BUFFER_PATH'] + "relabeled_data.csv"
+            with open(csv_file_output, 'w') as csvfile:
+                write = csv.writer(csvfile)
+                write.writerow(csv_columns)
+                write.writerows(data_dict)
+            
+            if(isStopAt100):
+                break
 
     #write data to csv
-    csv_columns = ['type','Name','description','photo_url','timestamp','state','tokenized_description','new_label']
+    csv_columns = ['type','longitude','description','photo_url','timestamp','state','tokenized_description','new_label','latitude']
     csv_file_output = env_vars['FILE_BUFFER_PATH'] + "relabeled_data.csv"
     with open(csv_file_output, 'w') as csvfile:
         write = csv.writer(csvfile)
