@@ -10,11 +10,12 @@ from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python import PythonOperator
 
-
+# implemented plugins pythonOperator
 import scraping_data_call
 import preprocess_data_call
 import model_predict_call
 import extract_top_word_call
+import drive_upload_viz_call
 
 from pythainlp.translate import Translate
 import spacy_sentence_bert
@@ -71,9 +72,10 @@ count_top_word = PythonOperator(
     python_callable=extract_top_word_call.extract_top_word,
 )
 
-send_to_visualize_frontend = DummyOperator(
+send_to_visualize_frontend = PythonOperator(
     task_id='send_to_visualize_frontend',
     dag=dag,
+    python_callable=drive_upload_viz_call.upload_to_drive,
 )
 
 

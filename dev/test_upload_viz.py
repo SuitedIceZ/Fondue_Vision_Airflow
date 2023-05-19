@@ -15,7 +15,7 @@ SCOPES = ['https://www.googleapis.com/auth/drive.file']
 # root_full_path = '/home/natnaphon/airflow/file_buffer/'
 buffer_full_path = env_vars['FILE_BUFFER_PATH']
 
-def upload_to_drive():
+def main():
     filename_1 = 'relabeled_data.csv'
     filename_2 = 'top_word_data_by_word.csv'
     
@@ -68,3 +68,6 @@ def upload_to_drive():
                                   fields='id').execute()
 
     print('File ID: %s' % file.get('id'))
+
+if __name__ == '__main__':
+    main()

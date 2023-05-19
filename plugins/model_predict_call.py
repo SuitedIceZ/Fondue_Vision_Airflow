@@ -54,7 +54,10 @@ def relabel_data():
     print("th2en dict",th2en_label_dictionary)
     print("en2th dict",en2th_label_dictionary)
 
-
+    # set default new_label to first of column 0
+    for i in range(len(data_dict)):
+        data_dict[i][7] = data_dict[i][0].split(',')[0]
+        
     # predict and relabel all rows
     for i in range(len(data_dict)):
         data = {
@@ -79,7 +82,7 @@ def relabel_data():
                 write.writerow(csv_columns)
                 write.writerows(data_dict)
             
-            if(isStopAt100):
+            if(i != 0 and isStopAt100):
                 break
 
     #write data to csv
